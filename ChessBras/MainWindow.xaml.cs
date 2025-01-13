@@ -19,9 +19,12 @@ namespace ChessBras
             _board = new Board();
             InitializeComponent();
             CreateChessBoard();
-            UpdateUI();
+            RefreshUI();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void CreateChessBoard()
         {
             // Créer les cases
@@ -43,8 +46,7 @@ namespace ChessBras
 
         private void Rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var rect = sender as Rectangle;
-            if (rect != null)
+            if (sender is Rectangle rect)
             {
                 int row = Grid.GetRow(rect);
                 int col = Grid.GetColumn(rect);
@@ -65,14 +67,14 @@ namespace ChessBras
                     {
                         MessageBox.Show("Mouvement invalide");
                     }
-                    UpdateUI();
+                    RefreshUI();
                     _selectedCell = null;
                     _destinationCell = null;
                 }
             }
         }
 
-        private void UpdateUI()
+        private void RefreshUI()
         {
             // fournir aux étudiants dans un helper
             GBoard.Children.OfType<TextBlock>().ToList().ForEach(x => GBoard.Children.Remove(x));

@@ -4,10 +4,15 @@ namespace ChessBras.Classes;
 
 public class Board
 {
-    private readonly List<APiece> _pieces = new List<APiece>();
-
+    private List<APiece> _pieces;
     public Board()
     {
+        InitBoard();
+    }
+
+    private void InitBoard()
+    {
+        _pieces = new List<APiece>();
         // Création des pièces
         for (int col = 0; col < Constants.BOARD_SIZE; col++)
         {
@@ -53,7 +58,7 @@ public class Board
         return GetPiece(row, col) != null;
     }
 
-    internal void MovePiece(Coordinates selectedCell, Coordinates destinationCell)
+    public void MovePiece(Coordinates selectedCell, Coordinates destinationCell)
     {
         APiece piece = GetPiece(selectedCell.GetRow(), selectedCell.GetCol());
         if (HasPiece(destinationCell.GetRow(), destinationCell.GetCol()))
@@ -64,7 +69,7 @@ public class Board
         piece.Move(destinationCell.GetRow(), destinationCell.GetCol());
     }
 
-    internal bool IsMoveLegal(Coordinates selectedCell, Coordinates destinationCell)
+    public bool IsMoveLegal(Coordinates selectedCell, Coordinates destinationCell)
     {
         APiece fromPiece = GetPiece(selectedCell.GetRow(), selectedCell.GetCol());
         APiece destinationPiece = GetPiece(destinationCell.GetRow(), destinationCell.GetCol());
@@ -81,31 +86,28 @@ public class Board
     /// Permet de valider la présence d'une pièce sur le chemin en cas de mouvement
     /// Le mouvement de la pièce doit être validé avant d'appeler cette méthode
     /// </summary>
-    /// <param name="fromRow">Rangée de départ</param>
-    /// <param name="fromCol">Colonne de départ</param>
-    /// <param name="destinationRow">Rangée d'arrivée</param>
-    /// <param name="destinationCol">Colonne d'arrivée</param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    internal bool HasCollision(int fromRow, int fromCol, int destinationRow, int destinationCol)
+    /// <param name="selectedCell.GetRow()">Point de départ</param>
+    /// <param name="destinationCell">Point d'arrivée</param>
+    /// <returns>true s'il y a une collision, false sinon</returns>
+    public bool HasCollision(Coordinates selectedCell, Coordinates destinationCell)
     {
         //vertical
-        if (fromRow != destinationRow && fromCol == destinationCol)
+        if (selectedCell.GetRow() != destinationCell.GetRow() && selectedCell.GetCol() == destinationCell.GetCol())
         {
-            for (int row = Math.Min(fromRow, destinationRow) +1; row < Math.Max(fromRow, destinationRow); row++)
+            for (int row = Math.Min(selectedCell.GetRow(), destinationCell.GetRow()) +1; row < Math.Max(selectedCell.GetRow(), destinationCell.GetRow()); row++)
             {
-                if (GetPiece(row, fromCol) != null)
+                if (GetPiece(row, selectedCell.GetCol()) != null)
                 {
                     return true;
                 }
             }
         }
         // horizontal
-        else if (fromCol != destinationCol && fromRow == destinationRow)
+        else if (selectedCell.GetCol() != destinationCell.GetCol() && selectedCell.GetRow() == destinationCell.GetRow())
         {
-            for (int col = Math.Min(fromCol, destinationCol) +1; col < Math.Max(fromCol, destinationCol); col++)
+            for (int col = Math.Min(selectedCell.GetCol(), destinationCell.GetCol()) +1; col < Math.Max(selectedCell.GetCol(), destinationCell.GetCol()); col++)
             {
-                if (GetPiece(fromRow, col) != null)
+                if (GetPiece(selectedCell.GetRow(), col) != null)
                 {
                     return true;
                 }
@@ -114,14 +116,14 @@ public class Board
         // diagonalle
         else
         {
-            for (int i = 1; i < Math.Abs(fromCol - destinationCol); i++)
+            for (int i = 1; i < Math.Abs(selectedCell.GetCol() - destinationCell.GetCol()); i++)
             {
                 // On va toujours valider les mouvements en allant vers le bas
-                int row = Math.Min(fromRow, destinationRow) + i;
+                int row = Math.Min(selectedCell.GetRow(), destinationCell.GetRow()) + i;
                 // dans ce cas, c'est l'increment de la colonne qui change
-                int col = fromCol > destinationCol
-                    ? Math.Min(fromCol, destinationCol) + i
-                    : Math.Max(fromCol, destinationCol) - i;
+                int col = selectedCell.GetCol() > destinationCell.GetCol()
+                    ? Math.Min(selectedCell.GetCol(), destinationCell.GetCol()) + i
+                    : Math.Max(selectedCell.GetCol(), destinationCell.GetCol()) - i;
 
                 if (GetPiece(row, col) != null)
                 {

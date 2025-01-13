@@ -26,7 +26,7 @@ public class Pawn : APiece
         {
             return false;
         }
-        if (board.HasCollision(_row, _col, row, col))
+        if (board.HasCollision(new Coordinates(_row, _col), new Coordinates(row, col)))
         {
             return false;
         }

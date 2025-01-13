@@ -16,10 +16,13 @@ public abstract class APiece
         _col = col;
         _isWhite = isWhite;
     }
-    public bool GetIsWhite()
+    public virtual void Move(int row, int col)
     {
-        return _isWhite;
+        _row = row;
+        _col = col;
     }
+
+    public abstract bool IsMoveLegal(int row, int col, Board board);
 
     public override string ToString()
     {
@@ -36,11 +39,8 @@ public abstract class APiece
         return _col;
     }
 
-    public virtual void Move(int row, int col)
+    public bool GetIsWhite()
     {
-        _row = row;
-        _col = col;
+        return _isWhite;
     }
-
-    public abstract bool IsMoveLegal(int row, int col, Board board);
 }
